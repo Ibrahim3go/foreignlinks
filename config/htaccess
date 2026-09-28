@@ -1,0 +1,43 @@
+# ============================================================
+#  Foreign Links Campus – .htaccess
+#  Place this file in /foreignlinks/ (root)
+# ============================================================
+
+Options -Indexes
+
+# ── Block direct access to sensitive folders ─────────────────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct browser access to /process/ folder
+    RewriteRule ^process/.*$  index.php  [F,L]
+
+    # Block direct access to /includes/ folder
+    RewriteRule ^includes/.*$ index.php  [F,L]
+
+    # Block direct access to /config/ folder
+    RewriteRule ^config/.*$   index.php  [F,L]
+</IfModule>
+
+# ── Protect uploads folder – no PHP execution ────────────────
+<IfModule mod_php.c>
+    <Directory "uploads">
+        php_flag engine off
+    </Directory>
+</IfModule>
+
+# ── Security Headers ─────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ── Disable directory browsing ───────────────────────────────
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# ── Hide server signature ────────────────────────────────────
+ServerSignature Off
